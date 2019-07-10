@@ -17,6 +17,7 @@
 
 """A parser which does not parse any metadata"""
 from pathlib import Path
+
 from typing import Optional, Mapping, Sequence
 
 from audeep.backend.log import LoggingMixin
@@ -31,7 +32,7 @@ class NoMetadataParser(LoggingMixin, Parser):
     only the basic feature learning capabilities of the auDeep application are required.
     """
 
-    def __init__(self, basedir: Path):
+    def __init__(self, basedir: Path, audio_type: str):
         """
         Creates and initializes a new NoMetadataParser for the specified data set base directory.
         
@@ -43,6 +44,7 @@ class NoMetadataParser(LoggingMixin, Parser):
         super().__init__(basedir)
 
         self._num_instances_cache = None
+        self.audio_type = audio_type
 
     def can_parse(self) -> bool:
         """
@@ -68,7 +70,11 @@ class NoMetadataParser(LoggingMixin, Parser):
             The number instances in the data set
         """
         if self._num_instances_cache is None:
-            self._num_instances_cache = len(list(self._basedir.rglob("*.wav")))
+            self._num_instances_cache = len(list(self._basedir.rglob(
+                "*.{audio_type}".format(
+                    audio_type=self.audio_type
+                )
+             )))
 
         # noinspection PyTypeChecker
         return self._num_instances_cache
@@ -107,8 +113,9 @@ class NoMetadataParser(LoggingMixin, Parser):
             A list of _InstanceMetadata containing one entry for each parsed audio file
         """
         meta_list = []
-
-        for file in self._basedir.rglob("*.wav"):  # type: Path
+        for file in self._basedir.rglob("*.{audio_type}".format(
+                    audio_type=self.audio_type,
+        )):
             filename = str(file.relative_to(self._basedir))
 
             instance_metadata = _InstanceMetadata(path=file,

@@ -1,3 +1,4 @@
+*_env/
 .idea
 auDeep.egg-info
 build/

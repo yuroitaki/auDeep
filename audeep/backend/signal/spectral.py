@@ -17,7 +17,8 @@
 
 """Spectrogram utilities"""
 import numpy as np
-from scipy.signal import spectrogram, hann
+from scipy.signal import spectrogram
+from scipy.signal.windows import hann
 
 
 def pre_emphasis_filter(signal: np.ndarray,

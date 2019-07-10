@@ -1,0 +1,1 @@
+audeep inspect raw --basedir ../fma_data/fma_small --parser audeep.backend.parsers.no_metadata.NoMetadataParser
